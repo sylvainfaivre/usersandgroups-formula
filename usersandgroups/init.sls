@@ -42,4 +42,5 @@ user_{{ user }}_present:
     - home: {{ home }}
     - gid: {{ gid }}
     - password: {{ password }}
+    - groups: {{ groups }}
 {% endfor %}
