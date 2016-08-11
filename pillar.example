@@ -1,4 +1,8 @@
 usersandgroups:
+  # you can change default configuration from map.jinja here
+  #lookup:
+    #home_base: '/home/users'
+
   foo:
     password: $6$...
 
