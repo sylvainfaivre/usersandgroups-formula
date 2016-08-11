@@ -1,13 +1,13 @@
 {% from "usersandgroups/map.jinja" import usersandgroups with context %}
 
-{% set users = salt['pillar.get']('usersandgroups', {}) %}
+{% set users = salt['pillar.get']('usersandgroups:users', {}) %}
 
 # iteration over all defined users
 {% for user, data in users.items() %}
-  {% set gid = salt['pillar.get']('usersandgroups:' ~ user ~ ':gid') %}
-  {% set password = salt['pillar.get']('usersandgroups:' ~ user ~ ':password') %}
-  {% set groups = salt['pillar.get']('usersandgroups:' ~ user ~ ':groups') %}
-  {% set home = salt['pillar.get']('usersandgroups:' ~ user ~ ':home', None) %}
+  {% set gid = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':gid') %}
+  {% set password = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':password') %}
+  {% set groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':groups') %}
+  {% set home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':home', None) %}
   {% if home is none %}
     {% set home = usersandgroups.home_base ~ user %}
   {% endif %}

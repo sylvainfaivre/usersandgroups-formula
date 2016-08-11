@@ -3,14 +3,15 @@ usersandgroups:
   #lookup:
     #home_base: '/home/users'
 
-  foo:
-    password: $6$...
+  users:
+    foo:
+      password: $6$...
 
-  bar:
-    password: $6$...
-    home: /srv/users/bar
-    gid: users
-    groups:
-      - group1
-      - group2
+    bar:
+      password: $6$...
+      home: /srv/users/bar
+      gid: users
+      groups:
+        - group1
+        - group2
 
