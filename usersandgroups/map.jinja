@@ -1,5 +1,6 @@
 {% set usersandgroups = salt['grains.filter_by']({
   'default': {
     'home_base': '/home/',
+    'shell': '/bin/bash',
   },
 }, merge=salt['pillar.get']('usersandgroups:lookup')) %}

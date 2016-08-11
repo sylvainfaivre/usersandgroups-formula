@@ -22,6 +22,10 @@ group_{{ group }}_present:
     {% set home = usersandgroups.home_base ~ user %}
   {% endif %}
   {% set home_parent = salt['file.dirname'](home) %}
+  {% set shell = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':shell', None) %}
+  {% if shell is none %}
+    {% set shell = usersandgroups.shell %}
+  {% endif %}
 
 # creation of all user's groups
 {% for group in groups %}
@@ -42,5 +46,6 @@ user_{{ user }}_present:
     - home: {{ home }}
     - gid: {{ gid }}
     - password: {{ password }}
+    - shell: {{ shell }}
     - groups: {{ groups }}
 {% endfor %}
