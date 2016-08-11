@@ -10,15 +10,20 @@ usersandgroups:
 
   # users are defined here
   users:
+    # minimal configuration
     foo:
       password: $6$...
 
+    # all available options
     bar:
       password: $6$...
       home: /srv/users/bar
+      # primary group
       gid: users
       shell: /bin/zsh
       groups:
         - group1
         - group2
+      ssh_key:
+        - source: salt://ssh_keys/foo.pub
 

@@ -26,6 +26,8 @@ group_{{ group }}_present:
   {% if shell is none %}
     {% set shell = usersandgroups.shell %}
   {% endif %}
+  {% set ssh_key = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_key', None) %}
+
 
 # creation of all user's groups
 {% for group in groups %}
@@ -43,9 +45,18 @@ home_{{ user }}_parent:
 user_{{ user }}_present:
   user.present:
     - name: {{ user }}
+    - password: {{ password }}
     - home: {{ home }}
     - gid: {{ gid }}
-    - password: {{ password }}
     - shell: {{ shell }}
     - groups: {{ groups }}
+
+{% if ssh_key is not none %}
+{% set key = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_key:source', None) %}
+user_{{ user }}_sshauth:
+  ssh_auth.present:
+    - user: {{ user }}
+    - source: {{ key }}
+{% endif %}
+
 {% endfor %}
