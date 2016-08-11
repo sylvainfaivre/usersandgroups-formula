@@ -1,8 +1,18 @@
 {% from "usersandgroups/map.jinja" import usersandgroups with context %}
 
+{% set groups = salt['pillar.get']('usersandgroups:groups', {}) %}
 {% set users = salt['pillar.get']('usersandgroups:users', {}) %}
 
-# iteration over all defined users
+# iteration over defined groups
+{% for group, data in groups.items() %}
+  {% set gid = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':gid') %}
+group_{{ group }}_present:
+  group.present:
+    - name: {{ group }}
+    - gid: {{ gid }}
+{% endfor %}
+
+# iteration over defined users
 {% for user, data in users.items() %}
   {% set gid = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':gid') %}
   {% set password = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':password') %}

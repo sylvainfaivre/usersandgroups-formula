@@ -1,8 +1,14 @@
 usersandgroups:
   # you can change default configuration from map.jinja here
   #lookup:
-    #home_base: '/home/users'
+  #  home_base: '/home/users'
 
+  # groups can be explicitely defined here
+  #groups:
+  #  foogroup:
+  #    gid: 1100
+
+  # users are defined here
   users:
     foo:
       password: $6$...
