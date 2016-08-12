@@ -26,6 +26,7 @@ usersandgroups:
       # primary group
       gid: users
       shell: /bin/zsh
+      system: True
       groups:
         - group1
         - group2

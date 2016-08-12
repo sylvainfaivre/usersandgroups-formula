@@ -18,6 +18,7 @@ group_{{ group }}_present:
   {% set gid = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':gid') %}
   {% set password = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':password') %}
   {% set groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':groups') %}
+  {% set system = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':system', False) %}
 
   {% set home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':home', None) %}
   {% if home is none %}
@@ -56,6 +57,7 @@ user_{{ user }}_present:
     - gid: {{ gid }}
     - shell: {{ shell }}
     - groups: {{ groups }}
+    - system: {{ system }}
 
 # SSH authorized_keys setting
 {% if ssh_pubkey is not none %}
