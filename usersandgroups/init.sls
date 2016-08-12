@@ -6,7 +6,7 @@
 
 # iteration over defined groups
 {% for group, data in groups.items() %}
-  {% set gid = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':gid') %}
+  {% set gid = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':gid', None) %}
 group_{{ group }}_present:
   group.present:
     - name: {{ group }}
