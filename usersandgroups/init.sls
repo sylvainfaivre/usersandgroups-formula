@@ -2,6 +2,7 @@
 
 {% set groups = salt['pillar.get']('usersandgroups:groups', {}) %}
 {% set users = salt['pillar.get']('usersandgroups:users', {}) %}
+{% set ssh_pubkey_dir = salt['pillar.get']('usersandgroups:config:ssh_pubkey_dir', None) %}
 
 # iteration over defined groups
 {% for group, data in groups.items() %}
@@ -17,17 +18,22 @@ group_{{ group }}_present:
   {% set gid = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':gid') %}
   {% set password = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':password') %}
   {% set groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':groups') %}
+
   {% set home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':home', None) %}
   {% if home is none %}
     {% set home = usersandgroups.home_base ~ user %}
   {% endif %}
   {% set home_parent = salt['file.dirname'](home) %}
+
   {% set shell = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':shell', None) %}
   {% if shell is none %}
     {% set shell = usersandgroups.shell %}
   {% endif %}
-  {% set ssh_key = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_key', None) %}
 
+  {% set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:source', None) %}
+  {% if ssh_pubkey is none and ssh_pubkey_dir is not none %}
+      {% set ssh_pubkey = ssh_pubkey_dir ~ user ~ '.pub' %}
+  {% endif %}
 
 # creation of all user's groups
 {% for group in groups %}
@@ -51,12 +57,13 @@ user_{{ user }}_present:
     - shell: {{ shell }}
     - groups: {{ groups }}
 
-{% if ssh_key is not none %}
-{% set key = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_key:source', None) %}
+# SSH authorized_keys setting
+{% if ssh_pubkey is not none %}
 user_{{ user }}_sshauth:
   ssh_auth.present:
     - user: {{ user }}
-    - source: {{ key }}
+    - source: {{ ssh_pubkey }}
 {% endif %}
 
 {% endfor %}
+

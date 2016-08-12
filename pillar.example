@@ -1,7 +1,13 @@
+# example of pillar configuration to use with the usersandgroups formula
+
 usersandgroups:
   # you can change default configuration from map.jinja here
   #lookup:
   #  home_base: '/home/users'
+
+  # you can also define additional global configuration
+  #config:
+  #  ssh_pubkeys_dir: salt://ssh_keys/
 
   # groups can be explicitely defined here
   #groups:
@@ -11,8 +17,7 @@ usersandgroups:
   # users are defined here
   users:
     # minimal configuration
-    foo:
-      password: $6$...
+    foo: {}
 
     # all available options
     bar:
@@ -24,6 +29,6 @@ usersandgroups:
       groups:
         - group1
         - group2
-      ssh_key:
-        - source: salt://ssh_keys/foo.pub
+      ssh_pubkey:
+        - source: salt://ssh_pubkey/foo.pub
 
