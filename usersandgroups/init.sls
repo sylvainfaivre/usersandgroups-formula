@@ -2,6 +2,8 @@
 
 {% set groups = salt['pillar.get']('usersandgroups:groups', {}) %}
 {% set users = salt['pillar.get']('usersandgroups:users', {}) %}
+{% set absent_groups = salt['pillar.get']('usersandgroups:absent_groups', {}) %}
+{% set absent_users = salt['pillar.get']('usersandgroups:absent_users', {}) %}
 {% set ssh_pubkey_dir = salt['pillar.get']('usersandgroups:config:ssh_pubkey_dir', None) %}
 
 # iteration over defined groups
@@ -69,3 +71,14 @@ user_{{ user }}_sshauth:
 
 {% endfor %}
 
+{% for absent_group in absent_groups %}
+group_{{ absent_group }}_absent:
+  group.absent:
+    - name: {{ absent_group }}
+{% endfor %}
+
+{% for absent_user in absent_users %}
+user_{{ absent_user }}_absent:
+  user.absent:
+    - name: {{ absent_user }}
+{% endfor %}

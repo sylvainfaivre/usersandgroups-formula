@@ -3,7 +3,7 @@ usersandgroups
 ==============
 
 A simple formula to configure users and groups via pillar.
-I found existing ones too complicated or buggy for my uses.
+I found existing ones too complicated or buggy for my needs.
 
 Available states
 ================
@@ -14,7 +14,7 @@ Available states
 ``usersandgroups``
 ------------------
 
-Configures a user's home directory, group, shell, the user itself, secondary groups.
+Configures users' home directory, group, shell, the user itself, secondary groups.
 
 It also manages per-user SSH authorized_keys files. Two possibilities:
 

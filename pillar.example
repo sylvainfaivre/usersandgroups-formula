@@ -33,3 +33,12 @@ usersandgroups:
       ssh_pubkey:
         - source: salt://ssh_pubkey/foo.pub
 
+  # absent group are defined here
+  #absent_groups:
+  #  - foogroup1
+  #  - foogroup2
+
+  # absent users here
+  #absent_users:
+  #  - foo1
+  #  - bar1
