@@ -24,7 +24,7 @@ group_{{ group }}_present:
 
   {% set home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':home', None) %}
   {% if home is none %}
-    {% set home = usersandgroups.home_base ~ user %}
+    {% set home = usersandgroups.home_base ~ user if user != 'root' else '/root' %}
   {% endif %}
   {% set home_parent = salt['file.dirname'](home) %}
 
@@ -46,10 +46,12 @@ user_{{ user }}_{{ group }}_groups:
 {% endfor %}
 
 # creation of home parent directory
+{% if home_parent != '/' %}
 home_{{ user }}_parent:
   file.directory:
     - name: {{ home_parent }}
     - makedirs: true
+{% endif %}
 
 user_{{ user }}_present:
   user.present:
