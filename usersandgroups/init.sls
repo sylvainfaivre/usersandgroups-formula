@@ -9,10 +9,12 @@
 # iteration over defined groups
 {% for group, data in groups.items() %}
   {% set gid = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':gid', None) %}
+  {% set system = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':system', False) %}
 group_{{ group }}_present:
   group.present:
     - name: {{ group }}
     - gid: {{ gid }}
+    - system: {{ system }}
 {% endfor %}
 
 # iteration over defined users

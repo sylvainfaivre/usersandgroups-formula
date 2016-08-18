@@ -13,6 +13,7 @@ usersandgroups:
   #groups:
   #  foogroup:
   #    gid: 1100
+  #    system: True
 
   # users are defined here
   users:
