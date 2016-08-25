@@ -47,13 +47,6 @@ user_{{ user }}_{{ group }}_groups:
     - name: {{ group }}
 {% endfor %}
 
-# creation of home parent directory
-{% if home_parent != '/' %}
-home_{{ user }}_parent:
-  file.directory:
-    - name: {{ home_parent }}
-    - makedirs: true
-{% endif %}
 
 user_{{ user }}_present:
   user.present:
@@ -64,6 +57,18 @@ user_{{ user }}_present:
     - shell: {{ shell }}
     - groups: {{ groups }}
     - system: {{ system }}
+
+# creation of home directory
+{% set gid = gid if gid is not none else user %}
+{{ user }}_home:
+  file.directory:
+    - name: {{ home }}
+    - user: {{ user }}
+    - group: {{ gid }}
+    - makedirs: true
+    - require:
+      - user: user_{{ user }}_present
+      - group: user_{{ user }}_{{ gid }}_present
 
 # SSH authorized_keys setting
 {% if ssh_pubkey is not none %}
