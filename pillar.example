@@ -25,7 +25,7 @@ usersandgroups:
       password: $6$...
       home: /srv/users/bar
       # primary group
-      gid: users
+      primary_group: users
       shell: /bin/zsh
       system: True
       groups:
