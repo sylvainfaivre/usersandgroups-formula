@@ -91,6 +91,7 @@ user_{{ user }}_sshauth:
 user_{{ absent_user }}_absent:
   user.absent:
     - name: {{ absent_user }}
+    - force: True
 {% endfor %}
 
 # removing absent groups
