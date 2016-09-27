@@ -35,9 +35,12 @@ group_{{ group }}_present:
     {% set shell = usersandgroups.shell %}
   {% endif %}
 
-  {% set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:source', None) %}
-  {% if ssh_pubkey is none and ssh_pubkey_dir is not none %}
-      {% set ssh_pubkey = ssh_pubkey_dir ~ user ~ '.pub' %}
+  {% set ssh_absent = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:absent', True) %}
+  {% if not ssh_absent %}
+    {% set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:source', None) %}
+    {% if ssh_pubkey is none and ssh_pubkey_dir is not none %}
+        {% set ssh_pubkey = ssh_pubkey_dir ~ user ~ '.pub' %}
+    {% endif %}
   {% endif %}
 
 # creation of all user's groups
@@ -77,7 +80,7 @@ user_{{ user }}_present:
       - group: group_{{ user }}_{{ primary_group }}_present
 
 # SSH authorized_keys setting
-{% if ssh_pubkey is not none %}
+{% if not ssh_absent and ssh_pubkey is not none %}
 user_{{ user }}_sshauth:
   ssh_auth.present:
     - user: {{ user }}

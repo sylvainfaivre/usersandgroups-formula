@@ -24,7 +24,6 @@ usersandgroups:
     bar:
       password: $6$...
       home: /srv/users/bar
-      # primary group
       primary_group: users
       shell: /bin/zsh
       system: True
@@ -32,6 +31,8 @@ usersandgroups:
         - group1
         - group2
       ssh_pubkey:
+        # uncomment to not manage ssh pubkey
+        #- absent: True
         - source: salt://ssh_pubkey/foo.pub
 
   # absent group are defined here
