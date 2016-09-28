@@ -35,7 +35,7 @@ group_{{ group }}_present:
     {% set shell = usersandgroups.shell %}
   {% endif %}
 
-  {% set ssh_absent = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:absent', True) %}
+  {% set ssh_absent = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:absent', False) %}
   {% if not ssh_absent %}
     {% set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:source', None) %}
     {% if ssh_pubkey is none and ssh_pubkey_dir is not none %}
