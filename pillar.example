@@ -35,7 +35,7 @@ usersandgroups:
         #- absent: True
         - source: salt://ssh_pubkey/foo.pub
 
-  # absent group are defined here
+  # absent groups are defined here
   #absent_groups:
   #  - foogroup1
   #  - foogroup2

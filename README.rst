@@ -25,3 +25,5 @@ The formula will first look for a per-user value and, if it doesn't exist,
 search for a {{ user }}.pub file in the config.ssh_pubkeys_dir if it exists.
 You can also indicate that a user have no ssh pubkey.
 
+All configuration is made using pillar data, read pillar.example to see how.
+
