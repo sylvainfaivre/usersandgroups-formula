@@ -11,6 +11,7 @@ usersandgroups:
     #files:
     #  enabled: True
     #  source: salt://users_files/
+    #  default_source: salt://users_files/_default/
 
   # groups can be explicitely defined here
   #groups:

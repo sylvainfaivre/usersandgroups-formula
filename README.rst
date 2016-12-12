@@ -29,6 +29,7 @@ You can also manage user files. Files management can be enabled or disabled
 globally or per-user.
 The source files can be defined globally, each user will take the directory
 with its username. Source can also be defined per-user.
+A default source can be defined and be used if no per-user source is found.
 
 All configuration is made using pillar data, read pillar.example to see how.
 
