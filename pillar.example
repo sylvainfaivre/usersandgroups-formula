@@ -7,7 +7,10 @@ usersandgroups:
 
   # you can also define additional global configuration
   #config:
-  #  ssh_pubkeys_dir: salt://ssh_keys/
+    #ssh_pubkeys_dir: salt://ssh_keys/
+    #files:
+    #  enabled: True
+    #  source: salt://users_files/
 
   # groups can be explicitely defined here
   #groups:
@@ -34,6 +37,9 @@ usersandgroups:
         # uncomment to not manage ssh pubkey
         #- absent: True
         - source: salt://ssh_pubkey/foo.pub
+      #files:
+        #enabled: True
+        #source: salt://users_file/user/
 
   # absent groups are defined here
   #absent_groups:

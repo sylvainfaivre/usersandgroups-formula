@@ -6,6 +6,10 @@
 {% set absent_users = salt['pillar.get']('usersandgroups:absent_users', {}) %}
 {% set ssh_pubkey_dir = salt['pillar.get']('usersandgroups:config:ssh_pubkey_dir', None) %}
 
+{% set files_enabled_global = salt['pillar.get']('usersandgroups:config:files:enabled', False) %}
+{% set files_source_global = salt['pillar.get']('usersandgroups:config:files:source', False) %}
+
+
 # iteration over defined groups
 {% for group, data in groups.items() %}
   {% set gid = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':gid', None) %}
@@ -43,6 +47,12 @@ group_{{ group }}_present:
     {% endif %}
   {% endif %}
 
+  {% set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:enabled', files_enabled_global) %}
+  {% if files_enabled %}
+    {% set files_source = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:source', files_source_global ~ user) %}
+  {% endif %}
+
+
 # creation of all user's groups
 {% for group in groups %}
 group_{{ user }}_{{ group }}_present:
@@ -69,12 +79,22 @@ user_{{ user }}_present:
     - system: {{ system }}
 
 # home directory creation
+# and management of its content if needed
 {{ user }}_home:
+  {% if files_enabled %}
+  file.recurse:
+  {% else %}
   file.directory:
+  {% endif %}
     - name: {{ home }}
     - user: {{ user }}
     - group: {{ primary_group }}
+    {% if files_enabled %}
+    - source: {{ files_source }}
+    {% endif %}
     - makedirs: true
+    - clean: False
+    - include_empty: true
     - require:
       - user: user_{{ user }}_present
       - group: group_{{ user }}_{{ primary_group }}_present
