@@ -28,6 +28,7 @@ group_{{ group }}_present:
     {% set primary_group = primary_group if primary_group is not none else user %}
   {% set password = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':password') %}
   {% set groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':groups') %}
+  {% set optional_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':optional_groups', None) %}
   {% set system = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':system', False) %}
 
   {% set home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':home', None) %}
@@ -77,6 +78,7 @@ user_{{ user }}_present:
     - gid: {{ primary_group }}
     - shell: {{ shell }}
     - groups: {{ groups }}
+    - optional_groups: {{ optional_groups }}
     - system: {{ system }}
 
 # home directory creation

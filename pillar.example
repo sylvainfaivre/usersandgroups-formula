@@ -34,6 +34,8 @@ usersandgroups:
       groups:
         - group1
         - group2
+      optional_groups:
+        - opt_group1
       ssh_pubkey:
         # uncomment to not manage ssh pubkey
         #- absent: True
