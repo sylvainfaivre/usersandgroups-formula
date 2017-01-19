@@ -12,6 +12,7 @@ usersandgroups:
     #  enabled: True
     #  source: salt://users_files/
     #  default_source: salt://users_files/_default/
+    #  remove_groups: False
 
   # groups can be explicitely defined here
   #groups:
@@ -31,6 +32,7 @@ usersandgroups:
       primary_group: users
       shell: /bin/zsh
       system: True
+      remove_groups: False
       groups:
         - group1
         - group2

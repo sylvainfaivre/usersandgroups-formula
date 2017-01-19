@@ -9,6 +9,7 @@
 {% set files_enabled_global = salt['pillar.get']('usersandgroups:config:files:enabled', False) %}
 {% set files_source_global = salt['pillar.get']('usersandgroups:config:files:source', False) %}
 {% set files_source_default = salt['pillar.get']('usersandgroups:config:files:default_source', False) %}
+{% set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
 
 
 # iteration over defined groups
@@ -54,6 +55,7 @@ group_{{ group }}_present:
     {% set files_source = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:source', files_source_global ~ user) %}
   {% endif %}
 
+  {% set remove_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':remove_groups', remove_groups_global) %}
 
 # creation of all user's groups
 {% for group in groups %}
@@ -77,6 +79,7 @@ user_{{ user }}_present:
     - home: {{ home }}
     - gid: {{ primary_group }}
     - shell: {{ shell }}
+    - remove_groups: {{ remove_groups }}
     - groups: {{ groups }}
     - optional_groups: {{ optional_groups }}
     - system: {{ system }}
