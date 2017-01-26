@@ -57,6 +57,7 @@ group_{{ group }}_present:
 
   {% set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:enabled', files_enabled_global) %}
   {% if files_enabled %}
+    {% set files = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', {}) %}
     {% set files_home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:home:source', files_home_global ~ user) %}
   {% endif %}
 
@@ -113,6 +114,26 @@ user_{{ user }}_present:
     - require:
       - user: user_{{ user }}_present
       - group: group_{{ user }}_{{ primary_group }}_present
+
+# other files management
+{% if files_enabled %}
+  {% for name, data in files.items() %}
+    {% if name != 'home' %}
+{{ user }}_{{ name }}:
+  file.recurse:
+    - name: {{ home }}/{{ data['destination'] }}
+    - user: {{ user }}
+    - group: {{ primary_group }}
+    - source: {{ data['source'] }}
+    - makedirs: true
+    - include_empty: true
+    - require:
+      - user: user_{{ user }}_present
+      - group: group_{{ user }}_{{ primary_group }}_present
+      - file: {{ user }}_home
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 # SSH authorized_keys setting
 {% if not ssh_absent and ssh_pubkey is not none %}

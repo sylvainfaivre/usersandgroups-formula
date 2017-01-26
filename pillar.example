@@ -54,6 +54,11 @@ usersandgroups:
         # and define its home directory too
         #home:
           #source: salt://users_file/user/
+        # you can also manage other files in the home directory
+        #ssh:
+          #source: salt://users_files/foo/.ssh
+          # destination is relative to home directory
+          #destination: .ssh
 
   # absent groups are defined here
   #absent_groups:
