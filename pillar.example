@@ -59,6 +59,10 @@ usersandgroups:
           #source: salt://users_files/foo/.ssh
           # destination is relative to home directory
           #destination: .ssh
+          # you can define options here, some are already set by default
+          #options:
+            #dir_mode: 700
+            #file_mode: 600
 
   # absent groups are defined here
   #absent_groups:

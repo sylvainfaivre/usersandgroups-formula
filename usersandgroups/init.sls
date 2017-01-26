@@ -126,7 +126,14 @@ user_{{ user }}_present:
     - group: {{ primary_group }}
     - source: {{ data['source'] }}
     - makedirs: true
+    - clean: False
     - include_empty: true
+    {% set options = data['options'] %}
+    {% if options is defined %}
+      {% for key, value in options.items() %}
+    - {{ key }}: {{ value }}
+      {% endfor %}
+    {% endif %}
     - require:
       - user: user_{{ user }}_present
       - group: group_{{ user }}_{{ primary_group }}_present
