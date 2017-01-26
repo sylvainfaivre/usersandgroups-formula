@@ -6,11 +6,16 @@
 {% set absent_users = salt['pillar.get']('usersandgroups:absent_users', {}) %}
 {% set ssh_pubkey_dir = salt['pillar.get']('usersandgroups:config:ssh_pubkey_dir', None) %}
 
-{% set files_enabled_global = salt['pillar.get']('usersandgroups:config:files:enabled', False) %}
-{% set files_source_global = salt['pillar.get']('usersandgroups:config:files:source', False) %}
-{% set files_default_source = salt['pillar.get']('usersandgroups:config:files:default_source', False) %}
-{% set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
+{% set files_global = salt['pillar.get']('usersandgroups:config:files', None) %}
+{% if files_global is not none %}
+  {% set files_enabled_global = True %}
+  {% set files_home_global = salt['pillar.get']('usersandgroups:config:files:home:source', None) %}
+  {% set files_default_home = salt['pillar.get']('usersandgroups:config:files:home:default_source', None) %}
+{% else %}
+  {% set files_enabled_global = False %}
+{% endif %}
 
+{% set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
 
 # iteration over defined groups
 {% for group, data in groups.items() %}
@@ -52,7 +57,7 @@ group_{{ group }}_present:
 
   {% set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:enabled', files_enabled_global) %}
   {% if files_enabled %}
-    {% set files_source = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:source', files_source_global ~ user) %}
+    {% set files_home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:home:source', files_home_global ~ user) %}
   {% endif %}
 
   {% set remove_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':remove_groups', remove_groups_global) %}
@@ -97,9 +102,9 @@ user_{{ user }}_present:
     - group: {{ primary_group }}
     {% if files_enabled %}
     - source:
-      - {{ files_source }}
-      {% if files_default_source %}
-      - {{ files_default_source }}
+      - {{ files_home }}
+      {% if files_default_home %}
+      - {{ files_default_home }}
       {% endif %}
     {% endif %}
     - makedirs: true

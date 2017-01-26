@@ -8,10 +8,16 @@ usersandgroups:
   # you can also define additional global configuration
   #config:
     #ssh_pubkeys_dir: salt://ssh_keys/
+
+    # files management is disabled by default
+    # if you want to enable, just define them
     #files:
-    #  enabled: True
-    #  source: salt://users_files/
-    #  default_source: salt://users_files/_default/
+      # home management
+      #home:
+        # home files will be picked in a sub directory named by its username
+        #source: salt://users_files/
+        # a common default source can also be used
+        #default_source: salt://users_files/_default/
     #  remove_groups: False
 
   # groups can be explicitely defined here
@@ -42,9 +48,12 @@ usersandgroups:
         # uncomment to not manage ssh pubkey
         #- absent: True
         - source: salt://ssh_pubkey/foo.pub
+      # you can enable or disable files management per user
       #files:
-        #enabled: True
-        #source: salt://users_file/user/
+        #enabled: False
+        # and define its home directory too
+        #home:
+          #source: salt://users_file/user/
 
   # absent groups are defined here
   #absent_groups:
