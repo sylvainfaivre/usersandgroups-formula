@@ -8,7 +8,7 @@
 
 {% set files_enabled_global = salt['pillar.get']('usersandgroups:config:files:enabled', False) %}
 {% set files_source_global = salt['pillar.get']('usersandgroups:config:files:source', False) %}
-{% set files_source_default = salt['pillar.get']('usersandgroups:config:files:default_source', False) %}
+{% set files_default_source = salt['pillar.get']('usersandgroups:config:files:default_source', False) %}
 {% set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
 
 
@@ -98,8 +98,8 @@ user_{{ user }}_present:
     {% if files_enabled %}
     - source:
       - {{ files_source }}
-      {% if files_source_default %}
-      - {{ files_source_default }}
+      {% if files_default_source %}
+      - {{ files_default_source }}
       {% endif %}
     {% endif %}
     - makedirs: true
