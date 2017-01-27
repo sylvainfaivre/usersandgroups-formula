@@ -110,7 +110,7 @@ user_{{ user }}_present:
     {% endif %}
     - makedirs: true
     - clean: False
-    - include_empty: true
+    - include_empty: false
     - require:
       - user: user_{{ user }}_present
       - group: group_{{ user }}_{{ primary_group }}_present
