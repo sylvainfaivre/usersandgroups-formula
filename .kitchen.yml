@@ -1,0 +1,37 @@
+---
+driver:
+  name: vagrant
+  provision: false
+  synced_folders:
+    - ['.kitchen/cache', '/tmp/omnibus', disabled: true]
+
+provisioner:
+  name: salt_solo
+  formula: usersandgroups
+  salt_install: bootstrap
+  require_chef: false
+  pillars:
+    top.sls:
+      base:
+        "*":
+          - usersandgroups
+  state_top:
+    base:
+      "*":
+        - usersandgroups
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: debian/wheezy64
+    #  - name: debian/jessie64
+
+suites:
+  - name: default
+    provisioner:
+      pillars-from-files:
+        usersandgroups.sls: test/salt/default/pillar/usersandgroups.sls
+    verifier:
+      inspec_tests:
+        - path: test/integration/default
