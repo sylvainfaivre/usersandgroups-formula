@@ -3,7 +3,8 @@
 usersandgroups:
   # you can change default configuration from map.jinja here
   #lookup:
-  #  home_base: '/home/users'
+    # don't forget trailing slash
+    #home_base: '/home/users/'
 
   # you can also define additional global configuration
   #config:
