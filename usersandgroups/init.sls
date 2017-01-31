@@ -6,14 +6,18 @@
 {% set absent_users = salt['pillar.get']('usersandgroups:absent_users', {}) %}
 {% set ssh_pubkey_dir = salt['pillar.get']('usersandgroups:config:ssh_pubkey_dir', None) %}
 
+## global files management
+
 {% set files_global = salt['pillar.get']('usersandgroups:config:files', None) %}
+# global files enabled
 {% if files_global is not none %}
   {% set files_enabled_global = True %}
-  {% set files_home_global = salt['pillar.get']('usersandgroups:config:files:home:source', None) %}
-  {% set files_default_home = salt['pillar.get']('usersandgroups:config:files:home:default_source', None) %}
 {% else %}
   {% set files_enabled_global = False %}
 {% endif %}
+# definition of home base directory and default home dir if defined
+{% set files_home_global = salt['pillar.get']('usersandgroups:config:files:home:source', None) %}
+{% set files_default_home = salt['pillar.get']('usersandgroups:config:files:home:default_source', None) %}
 
 {% set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
 
@@ -55,9 +59,20 @@ group_{{ group }}_present:
     {% endif %}
   {% endif %}
 
-  {% set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:enabled', files_enabled_global) %}
+  ## per-user files management
+
+  # per-user files enabled
+  {% set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:enabled', True) %}
   {% if files_enabled %}
-    {% set files = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', {}) %}
+    # per-user definition of files
+    {% set files = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', None) %}
+    {% if files is not none %}
+      {% set files_enabled = True %}
+    {% else %}
+      {% set files_enabled = files_enabled_global %}
+    {% endif %}
+
+    # per-user home directory, depending of global ones if not per-user
     {% set files_home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:home:source', files_home_global ~ user) %}
   {% endif %}
 
@@ -104,9 +119,7 @@ user_{{ user }}_present:
     {% if files_enabled %}
     - source:
       - {{ files_home }}
-      {% if files_default_home %}
       - {{ files_default_home }}
-      {% endif %}
     {% endif %}
     - makedirs: true
     - clean: False
@@ -116,7 +129,7 @@ user_{{ user }}_present:
       - group: group_{{ user }}_{{ primary_group }}_present
 
 # other files management
-{% if files_enabled %}
+{% if files_enabled and files is not none %}
   {% for name, data in files.items() %}
     {% if name != 'home' %}
 {{ user }}_{{ name }}:
