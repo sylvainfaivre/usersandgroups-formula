@@ -1,9 +1,12 @@
 {% from "usersandgroups/map.jinja" import usersandgroups with context %}
 
+# absent/present groups and users
 {% set groups = salt['pillar.get']('usersandgroups:groups', {}) %}
 {% set users = salt['pillar.get']('usersandgroups:users', {}) %}
 {% set absent_groups = salt['pillar.get']('usersandgroups:absent_groups', {}) %}
 {% set absent_users = salt['pillar.get']('usersandgroups:absent_users', {}) %}
+
+# configuration
 {% set ssh_pubkey_dir = salt['pillar.get']('usersandgroups:config:ssh_pubkey_dir', None) %}
 
 ## global files management
@@ -34,6 +37,8 @@ group_{{ group }}_present:
 
 # iteration over defined users
 {% for user, data in users.items() %}
+
+  # user configuration
   {% set primary_group = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':primary_group', None) %}
     {% set primary_group = primary_group if primary_group is not none else user %}
   {% set password = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':password') %}
@@ -41,16 +46,19 @@ group_{{ group }}_present:
   {% set optional_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':optional_groups', None) %}
   {% set system = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':system', False) %}
 
+  # defining its home, depending of configuration
   {% set home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':home', None) %}
   {% if home is none %}
     {% set home = usersandgroups.home_base ~ user if user != 'root' else '/root' %}
   {% endif %}
 
+  # defining its shell
   {% set shell = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':shell', None) %}
   {% if shell is none %}
     {% set shell = usersandgroups.shell %}
   {% endif %}
 
+  # do we manage its ssh pubkey
   {% set ssh_absent = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:absent', False) %}
   {% if not ssh_absent %}
     {% set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:source', None) %}
@@ -76,6 +84,7 @@ group_{{ group }}_present:
     {% set files_home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:home:source', files_home_global ~ user) %}
   {% endif %}
 
+  # do we remove its already present groups
   {% set remove_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':remove_groups', remove_groups_global) %}
 
 # creation of all user's groups
