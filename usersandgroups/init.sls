@@ -99,7 +99,7 @@ group_{{ group }}_present:
   {% set remove_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':remove_groups', remove_groups_global) %}
 
 # creation of all user's groups
-{% for group in groups %}
+{% for group in groups|unique %}
 group_{{ user }}_{{ group }}_present:
   group.present:
     - name: {{ group }}
