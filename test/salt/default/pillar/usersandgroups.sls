@@ -18,4 +18,4 @@ usersandgroups:
       system: True
     baz:
       ssh_pubkey:
-        - absent: True
+        - manage: False

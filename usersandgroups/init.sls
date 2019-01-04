@@ -68,11 +68,13 @@ group_{{ group }}_present:
 
   # ssh public keys management
   #
-  # :ssh_absent         do not try to copy any pubkey
-  # :ssh_pubkey:source  set source for pubkeys
-  #                      if not set use global ssh_pubkey_dir
-  {% set ssh_absent = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:absent', False) %}
-  {% if not ssh_absent %}
+  # :users:<user>:ssh_pubkey  per-user configuration of SSH pub keys
+  #
+  #    :manage  manage or not pubkeys, defaults to True
+  #    :source  set source for pubkeys
+  #              if not set, use global ssh_pubkey_dir and look for each user pubkey
+  {% set ssh_manage = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:manage', True) %}
+  {% if ssh_manage %}
     {% set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:source', None) %}
     {% if ssh_pubkey is none and ssh_pubkey_dir is not none %}
         {% set ssh_pubkey = ssh_pubkey_dir ~ user ~ '.pub' %}
@@ -176,7 +178,7 @@ user_{{ user }}_present:
 {% endif %}
 
 # SSH authorized_keys setting
-{% if not ssh_absent and ssh_pubkey is not none %}
+{% if ssh_manage and ssh_pubkey is not none %}
 user_{{ user }}_sshauth:
   ssh_auth.present:
     - user: {{ user }}

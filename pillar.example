@@ -47,7 +47,8 @@ usersandgroups:
         - opt_group1
       ssh_pubkey:
         # uncomment to not manage ssh pubkey
-        #- absent: True
+        #- manage: False
+	# or specify an alternative source
         - source: salt://ssh_pubkey/foo.pub
       # you can enable or disable files management per user
       #files:
