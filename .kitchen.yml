@@ -20,6 +20,11 @@ provisioner:
       "*":
         - usersandgroups
 
+  # workaround to push an extra directory with ssh pub keys in the file_roots path
+  dependencies:
+    - name: ssh_keys
+      path: ./test/salt
+
 verifier:
   name: inspec
 

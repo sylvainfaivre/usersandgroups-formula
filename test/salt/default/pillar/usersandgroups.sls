@@ -2,6 +2,8 @@
 usersandgroups:
   lookup:
     home_base: '/srv/'
+  config:
+    ssh_pubkey_dir: salt://ssh_keys/
   groups:
     users:
       gid: 1001
