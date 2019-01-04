@@ -12,3 +12,8 @@ describe user('bar') do
     its('home') { should eq '/srv/bar' }
     its('uid') { should be < 1000 }
 end
+
+describe user('baz') do
+    it { should exist }
+    its('home') { should eq '/srv/baz' }
+end

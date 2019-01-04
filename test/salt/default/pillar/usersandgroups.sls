@@ -16,3 +16,6 @@ usersandgroups:
     bar:
       password: $6$2xYqAULy$Gw9urwgVnoxaMWnubLu6GXPDOBHnaYx0Se7SjjtkewtwpJLGqraFORliWh2TMNdlwlnbFiOVPiA6JV3Qi.B3I.
       system: True
+    baz:
+      ssh_pubkey:
+        - absent: True

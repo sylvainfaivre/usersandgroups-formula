@@ -13,3 +13,7 @@ describe file('/srv/bar/.ssh/authorized_keys') do
   f = File.open('test/salt/ssh_keys/bar.pub')
   its('content') { should eq f.read }
 end
+
+describe file('/srv/baz/.ssh/authorized_keys') do
+  it { should_not exist }
+end
