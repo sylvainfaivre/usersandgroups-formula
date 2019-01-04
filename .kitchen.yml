@@ -9,6 +9,7 @@ provisioner:
   name: salt_solo
   formula: usersandgroups
   salt_install: bootstrap
+  salt_version: latest
   require_chef: false
   pillars:
     top.sls:
@@ -29,8 +30,8 @@ verifier:
   name: inspec
 
 platforms:
-  - name: debian/wheezy64
-    #  - name: debian/jessie64
+  - name: debian/jessie64
+  - name: debian/stretch64
 
 suites:
   - name: default
