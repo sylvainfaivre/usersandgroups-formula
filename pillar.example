@@ -48,8 +48,10 @@ usersandgroups:
       ssh_pubkey:
         # uncomment to not manage ssh pubkey
         #- manage: False
-	# or specify an alternative source
-        - source: salt://ssh_pubkey/foo.pub
+        # or specify one or more sources
+        - sources:
+           - salt://ssh_pubkey/foo.pub
+           - salt://ssh_pubkey/bar.pub
       # you can enable or disable files management per user
       #files:
         #enabled: False

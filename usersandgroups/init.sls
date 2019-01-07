@@ -71,13 +71,13 @@ group_{{ group }}_present:
   # :users:<user>:ssh_pubkey  per-user configuration of SSH pub keys
   #
   #    :manage  manage or not pubkeys, defaults to True
-  #    :source  set source for pubkeys
+  #    :sources set sources for pubkeys
   #              if not set, use global ssh_pubkey_dir and look for each user pubkey
   {% set ssh_manage = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:manage', True) %}
   {% if ssh_manage %}
-    {% set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:source', None) %}
+    {% set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:sources', None) %}
     {% if ssh_pubkey is none and ssh_pubkey_dir is not none %}
-        {% set ssh_pubkey = ssh_pubkey_dir ~ user ~ '.pub' %}
+        {% set ssh_pubkey = [ssh_pubkey_dir ~ user ~ '.pub'] %}
     {% endif %}
   {% endif %}
 
@@ -179,10 +179,12 @@ user_{{ user }}_present:
 
 # SSH authorized_keys setting
 {% if ssh_manage and ssh_pubkey is not none %}
-user_{{ user }}_sshauth:
+    {% for source in ssh_pubkey %}
+user_{{ user }}_sshauth_{{ loop.index0 }}:
   ssh_auth.present:
     - user: {{ user }}
-    - source: {{ ssh_pubkey }}
+    - source: {{ source }}
+    {% endfor %}
 {% endif %}
 
 {% endfor %}

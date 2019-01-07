@@ -19,3 +19,8 @@ usersandgroups:
     baz:
       ssh_pubkey:
         - manage: False
+    foobar:
+      ssh_pubkey:
+        - sources:
+            - salt://ssh_keys/foo.pub
+            - salt://ssh_keys/bar.pub
