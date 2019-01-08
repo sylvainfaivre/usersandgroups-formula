@@ -179,12 +179,15 @@ user_{{ user }}_present:
 
 # SSH authorized_keys setting
 {% if ssh_manage and ssh_pubkey is not none %}
-    {% for source in ssh_pubkey %}
+  {% for source in ssh_pubkey %}
 user_{{ user }}_sshauth_{{ loop.index0 }}:
   ssh_auth.present:
     - user: {{ user }}
     - source: {{ source }}
-    {% endfor %}
+    - require:
+      - user: user_{{ user }}_present
+      - file: {{ user }}_home
+  {% endfor %}
 {% endif %}
 
 {% endfor %}
