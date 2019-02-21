@@ -1,6 +1,6 @@
 ---
 driver:
-  name: vagrant
+  name: docker
   provision: false
   synced_folders:
     - ['.kitchen/cache', '/tmp/omnibus', disabled: true]
@@ -30,8 +30,8 @@ verifier:
   name: inspec
 
 platforms:
-  - name: debian/jessie64
-  - name: debian/stretch64
+  - name: debian-9
+  - name: debian-8
 
 suites:
   - name: default
