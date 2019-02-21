@@ -37,7 +37,7 @@ All configuration is made using pillar data, read pillar.example to see how.
 Tests
 =====
 
-This formula is tested on Debian Wheezy 64 with latest version of Saltstack.
+This formula is tested on Debian Jessie and Stretch with latest version of Saltstack.
 Tests are run with `Test-Kitchen<https://kitchen.ci>`_ and `InSpec<http://inspec.io/>`_.
 To use them you need kitchen, `kitchen-salt<https://github.com/simonmcc/kitchen-salt>`_
 and `kitchen-inspec<https://github.com/chef/kitchen-inspec>`_.
