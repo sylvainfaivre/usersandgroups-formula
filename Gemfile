@@ -1,9 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'test-kitchen'
-gem 'kitchen-vagrant'
-gem 'kitchen-salt'
-gem 'kitchen-inspec'
-gem 'unf'
-gem 'activesupport'
-gem 'kitchen-docker'
+gem 'kitchen-docker', '>= 2.9'
+gem 'kitchen-salt', '>= 0.5.0'
+gem 'kitchen-inspec', '>= 1.1'
