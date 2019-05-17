@@ -5,6 +5,9 @@ describe user('foo') do
     its('home') { should eq '/home/foo_home' }
     its('shell') { should eq '/bin/sh' }
     its('group') { should eq 'users' }
+    ['foog', 'barg', 'bazg', 'users'].each do |group|
+        its('groups') { should include group }
+    end
 end
 
 describe user('bar') do
