@@ -13,6 +13,10 @@ usersandgroups:
       home: /home/foo_home
       shell: /bin/sh
       primary_group: users
+      groups:
+        - foog
+        - barg
+        - bazg
     bar:
       password: $6$2xYqAULy$Gw9urwgVnoxaMWnubLu6GXPDOBHnaYx0Se7SjjtkewtwpJLGqraFORliWh2TMNdlwlnbFiOVPiA6JV3Qi.B3I.
       system: True
