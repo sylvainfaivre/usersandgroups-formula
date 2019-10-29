@@ -92,7 +92,7 @@ provisioner:
         '*':
           - usersandgroups
   pillars-from-files:
-    usersandgroups.sls: test/salt/default/pillar/usersandgroups.sls
+    usersandgroups.sls: test/salt/pillar/usersandgroups.sls
 
   # make `ssh_keys` directory with ssh pub keys available to salt fileserver
   dependencies:
@@ -115,7 +115,7 @@ suites:
   - name: files
     provisioner:
       pillars-from-files:
-        usersandgroups.sls: test/salt/default/pillar/files.sls
+        usersandgroups.sls: test/salt/pillar/files.sls
     verifier:
       inspec_tests:
         - path: test/integration/files
