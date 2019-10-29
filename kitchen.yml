@@ -75,7 +75,7 @@ platforms:
 
 provisioner:
   name: salt_solo
-  log_level: info
+  log_level: debug
   salt_install: none
   require_chef: false
   formula: usersandgroups
@@ -96,7 +96,7 @@ provisioner:
 
   # make `ssh_keys` directory with ssh pub keys available to salt fileserver
   dependencies:
-    - name: ssh_keys
+    - name: files
       path: ./test/salt
 
 verifier:

@@ -3,7 +3,7 @@ usersandgroups:
   lookup:
     home_base: '/srv/'
   config:
-    ssh_pubkey_dir: salt://ssh_keys/
+    ssh_pubkey_dir: salt://files/ssh_keys/
   groups:
     users:
       gid: 1001
@@ -26,5 +26,5 @@ usersandgroups:
     foobar:
       ssh_pubkey:
         - sources:
-            - salt://ssh_keys/foo.pub
-            - salt://ssh_keys/bar.pub
+            - salt://files/ssh_keys/foo.pub
+            - salt://files/ssh_keys/bar.pub
