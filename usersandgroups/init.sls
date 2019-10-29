@@ -1,70 +1,70 @@
-{% from "usersandgroups/map.jinja" import usersandgroups with context %}
+{%- from "usersandgroups/map.jinja" import usersandgroups with context %}
 
 # defining absent and present groups and users
-{% set groups = salt['pillar.get']('usersandgroups:groups', {}) %}
-{% set users = salt['pillar.get']('usersandgroups:users', {}) %}
-{% set absent_groups = salt['pillar.get']('usersandgroups:absent_groups', {}) %}
-{% set absent_users = salt['pillar.get']('usersandgroups:absent_users', {}) %}
+{%- set groups = salt['pillar.get']('usersandgroups:groups', {}) %}
+{%- set users = salt['pillar.get']('usersandgroups:users', {}) %}
+{%- set absent_groups = salt['pillar.get']('usersandgroups:absent_groups', {}) %}
+{%- set absent_users = salt['pillar.get']('usersandgroups:absent_users', {}) %}
 
 # global configuration of ssh public keys directory
-{% set ssh_pubkey_dir = salt['pillar.get']('usersandgroups:config:ssh_pubkey_dir', None) %}
+{%- set ssh_pubkey_dir = salt['pillar.get']('usersandgroups:config:ssh_pubkey_dir', None) %}
 
 # :config:files       global files management
 #
 # enabled if any value is set
-{% set files_global = salt['pillar.get']('usersandgroups:config:files', None) %}
-{% if files_global is not none %}
-  {% set files_enabled_global = True %}
-{% else %}
-  {% set files_enabled_global = False %}
-{% endif %}
+{%- set files_global = salt['pillar.get']('usersandgroups:config:files', None) %}
+{%- if files_global is not none %}
+  {%- set files_enabled_global = True %}
+{%- else %}
+  {%- set files_enabled_global = False %}
+{%- endif %}
 
 # :config:files:home  global definition of base and default sources for $HOME
 #
 #   :source           each user will look for its named sub-directory as source
 #   :default_source   will be copied as-is, if previous is not set (here or
 #                      in user config) or if it doesn't exist
-{% set files_home_global = salt['pillar.get']('usersandgroups:config:files:home:source', None) %}
-{% set files_default_home = salt['pillar.get']('usersandgroups:config:files:home:default_source', None) %}
+{%- set files_home_global = salt['pillar.get']('usersandgroups:config:files:home:source', None) %}
+{%- set files_default_home = salt['pillar.get']('usersandgroups:config:files:home:default_source', None) %}
 
 # global option to remove groups from users if not explicitely declared, default False
-{% set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
+{%- set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
 
 # iteration over defined groups
-{% for group, data in groups.items() %}
-  {% set gid = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':gid', None) %}
-  {% set system = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':system', False) %}
+{%- for group, data in groups.items() %}
+  {%- set gid = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':gid', None) %}
+  {%- set system = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':system', False) %}
 # creation
 group_{{ group }}_present:
   group.present:
     - name: {{ group }}
     - gid: {{ gid }}
     - system: {{ system }}
-{% endfor %}
+{%- endfor %}
 
 # iteration over defined users
-{% for user, data in users.items() %}
+{%- for user, data in users.items() %}
 
   ## user specific configuration
 
-  {% set primary_group = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':primary_group', None) %}
-    {% set primary_group = primary_group if primary_group is not none else user %}
-  {% set password = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':password') %}
-  {% set groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':groups') %}
-  {% set optional_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':optional_groups', None) %}
-  {% set system = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':system', False) %}
+  {%- set primary_group = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':primary_group', None) %}
+    {%- set primary_group = primary_group if primary_group is not none else user %}
+  {%- set password = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':password') %}
+  {%- set groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':groups') %}
+  {%- set optional_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':optional_groups', None) %}
+  {%- set system = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':system', False) %}
 
   # definition of $HOME path
-  {% set home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':home', None) %}
-  {% if home is none %}
-    {% set home = usersandgroups.home_base ~ user if user != 'root' else '/root' %}
-  {% endif %}
+  {%- set home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':home', None) %}
+  {%- if home is none %}
+    {%- set home = usersandgroups.home_base ~ user if user != 'root' else '/root' %}
+  {%- endif %}
 
   # defining its shell
-  {% set shell = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':shell', None) %}
-  {% if shell is none %}
-    {% set shell = usersandgroups.shell %}
-  {% endif %}
+  {%- set shell = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':shell', None) %}
+  {%- if shell is none %}
+    {%- set shell = usersandgroups.shell %}
+  {%- endif %}
 
   # ssh public keys management
   #
@@ -73,46 +73,46 @@ group_{{ group }}_present:
   #    :manage  manage or not pubkeys, defaults to True
   #    :sources set sources for pubkeys
   #              if not set, use global ssh_pubkey_dir and look for each user pubkey
-  {% set ssh_manage = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:manage', True) %}
-  {% if ssh_manage %}
-    {% set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:sources', None) %}
-    {% if ssh_pubkey is none and ssh_pubkey_dir is not none %}
-        {% set ssh_pubkey = [ssh_pubkey_dir ~ user ~ '.pub'] %}
-    {% endif %}
-  {% endif %}
+  {%- set ssh_manage = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:manage', True) %}
+  {%- if ssh_manage %}
+    {%- set ssh_pubkey = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':ssh_pubkey:sources', None) %}
+    {%- if ssh_pubkey is none and ssh_pubkey_dir is not none %}
+        {%- set ssh_pubkey = [ssh_pubkey_dir ~ user ~ '.pub'] %}
+    {%- endif %}
+  {%- endif %}
 
   # :users:<user>:files   enable or disable per-user file management
   #                        if not set, use global config
-  {% set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:enabled', True) %}
-  {% if files_enabled %}
+  {%- set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', True) %}
+  {%- if files_enabled %}
     # per-user definition of files
-    {% set files = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', None) %}
-    {% if files is not none %}
-      {% set files_enabled = True %}
-    {% else %}
-      {% set files_enabled = files_enabled_global %}
-    {% endif %}
+    {%- set files = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', None) %}
+    {%- if files is not none %}
+      {%- set files_enabled = True %}
+    {%- else %}
+      {%- set files_enabled = files_enabled_global %}
+    {%- endif %}
 
     # per-user $HOME source definition, depending of global config if not
-    {% set files_home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:home:source', files_home_global ~ user) %}
-  {% endif %}
+    {%- set files_home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:home:source', files_home_global ~ user) %}
+  {%- endif %}
 
   # do we remove its already present groups, depending of global config if not set
-  {% set remove_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':remove_groups', remove_groups_global) %}
+  {%- set remove_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':remove_groups', remove_groups_global) %}
 
 # creation of all user's groups
-{% for group in groups|unique %}
+{%- for group in groups|unique %}
 group_{{ user }}_{{ group }}_present:
   group.present:
     - name: {{ group }}
-{% endfor %}
+{%- endfor %}
 
 # user's primary group creation
-{% if primary_group not in groups %}
+{%- if primary_group not in groups %}
 group_{{ user }}_{{ primary_group }}_present:
   group.present:
     - name: {{ primary_group }}
-{% endif %}
+{%- endif %}
 
 # user creation
 user_{{ user }}_present:
@@ -130,19 +130,21 @@ user_{{ user }}_present:
 # home directory creation
 # and management of its content if needed
 {{ user }}_home:
-  {% if files_enabled %}
+  {%- if files_enabled %}
   file.recurse:
-  {% else %}
+  {%- else %}
   file.directory:
-  {% endif %}
+  {%- endif %}
     - name: {{ home }}
     - user: {{ user }}
     - group: {{ primary_group }}
-    {% if files_enabled %}
+    {%- if files_enabled %}
     - source:
       - {{ files_home }}
+      {%- if files_enabled_global %}
       - {{ files_default_home }}
-    {% endif %}
+      {%- endif %}
+    {%- endif %}
     - makedirs: true
     - clean: False
     - include_empty: false
@@ -151,9 +153,9 @@ user_{{ user }}_present:
       - group: group_{{ user }}_{{ primary_group }}_present
 
 # other files management
-{% if files_enabled and files is not none %}
-  {% for name, data in files.items() %}
-    {% if name != 'home' %}
+{%- if files_enabled and files is not none %}
+  {%- for name, data in files.items() %}
+    {%- if name != 'home' %}
 {{ user }}_{{ name }}:
   file.recurse:
     - name: {{ home }}/{{ data['destination'] }}
@@ -163,23 +165,23 @@ user_{{ user }}_present:
     - makedirs: true
     - clean: False
     - include_empty: true
-    {% set options = data['options'] %}
-    {% if options is defined %}
-      {% for key, value in options.items() %}
+    {%- set options = data['options'] %}
+    {%- if options is defined %}
+      {%- for key, value in options.items() %}
     - {{ key }}: {{ value }}
-      {% endfor %}
-    {% endif %}
+      {%- endfor %}
+    {%- endif %}
     - require:
       - user: user_{{ user }}_present
       - group: group_{{ user }}_{{ primary_group }}_present
       - file: {{ user }}_home
-    {% endif %}
-  {% endfor %}
-{% endif %}
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}
 
 # SSH authorized_keys setting
-{% if ssh_manage and ssh_pubkey is not none %}
-  {% for source in ssh_pubkey %}
+{%- if ssh_manage and ssh_pubkey is not none %}
+  {%- for source in ssh_pubkey %}
 user_{{ user }}_sshauth_{{ loop.index0 }}:
   ssh_auth.present:
     - user: {{ user }}
@@ -187,23 +189,23 @@ user_{{ user }}_sshauth_{{ loop.index0 }}:
     - require:
       - user: user_{{ user }}_present
       - file: {{ user }}_home
-  {% endfor %}
-{% endif %}
+  {%- endfor %}
+{%- endif %}
 
-{% endfor %}
+{%- endfor %}
 
 # removing absent users
-{% for absent_user in absent_users %}
+{%- for absent_user in absent_users %}
 user_{{ absent_user }}_absent:
   user.absent:
     - name: {{ absent_user }}
     - force: True
-{% endfor %}
+{%- endfor %}
 
 # removing absent groups
-{% for absent_group in absent_groups %}
+{%- for absent_group in absent_groups %}
 group_{{ absent_group }}_absent:
   group.absent:
     - name: {{ absent_group }}
-{% endfor %}
+{%- endfor %}
 

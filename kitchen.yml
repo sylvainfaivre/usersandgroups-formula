@@ -75,7 +75,7 @@ platforms:
 
 provisioner:
   name: salt_solo
-  log_level: info
+  log_level: debug
   salt_install: none
   require_chef: false
   formula: usersandgroups
@@ -92,11 +92,11 @@ provisioner:
         '*':
           - usersandgroups
   pillars-from-files:
-    usersandgroups.sls: test/salt/default/pillar/usersandgroups.sls
+    usersandgroups.sls: test/salt/pillar/usersandgroups.sls
 
   # make `ssh_keys` directory with ssh pub keys available to salt fileserver
   dependencies:
-    - name: ssh_keys
+    - name: files
       path: ./test/salt
 
 verifier:
@@ -111,3 +111,11 @@ verifier:
 
 suites:
   - name: default
+
+  - name: files
+    provisioner:
+      pillars-from-files:
+        usersandgroups.sls: test/salt/pillar/files.sls
+    verifier:
+      inspec_tests:
+        - path: test/integration/files

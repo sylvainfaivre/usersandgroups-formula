@@ -54,7 +54,6 @@ usersandgroups:
            - salt://ssh_pubkey/bar.pub
       # you can enable or disable files management per user
       #files:
-        #enabled: False
         # and define its home directory too
         #home:
           #source: salt://users_file/user/
