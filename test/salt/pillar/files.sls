@@ -22,13 +22,12 @@ usersandgroups:
         - foog
         - barg
         - bazg
-#      files:
-##        enabled: True
-#        home:
-#          source: salt://foo/
     bar:
       password: $6$2xYqAULy$Gw9urwgVnoxaMWnubLu6GXPDOBHnaYx0Se7SjjtkewtwpJLGqraFORliWh2TMNdlwlnbFiOVPiA6JV3Qi.B3I.
       system: True
+      files:
+        home:
+          source: salt://files/bar/
     baz:
       ssh_pubkey:
         - manage: False

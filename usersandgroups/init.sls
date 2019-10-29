@@ -83,7 +83,7 @@ group_{{ group }}_present:
 
   # :users:<user>:files   enable or disable per-user file management
   #                        if not set, use global config
-  {%- set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:enabled', True) %}
+  {%- set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', True) %}
   {%- if files_enabled %}
     # per-user definition of files
     {%- set files = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', None) %}
