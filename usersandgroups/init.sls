@@ -141,7 +141,9 @@ user_{{ user }}_present:
     {%- if files_enabled %}
     - source:
       - {{ files_home }}
+      {%- if files_enabled_global %}
       - {{ files_default_home }}
+      {%- endif %}
     {%- endif %}
     - makedirs: true
     - clean: False
