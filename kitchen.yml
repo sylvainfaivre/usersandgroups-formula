@@ -111,3 +111,11 @@ verifier:
 
 suites:
   - name: default
+
+  - name: files
+    provisioner:
+      pillars-from-files:
+        usersandgroups.sls: test/salt/default/pillar/files.sls
+    verifier:
+      inspec_tests:
+        - path: test/integration/files
