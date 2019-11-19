@@ -11,7 +11,7 @@ usersandgroups:
     #ssh_pubkeys_dir: salt://ssh_keys/
 
     # files management is disabled by default
-    # if you want to enable, just define them
+    # if you want to enable globally, just define them
     #files:
       # home management
       #home:
