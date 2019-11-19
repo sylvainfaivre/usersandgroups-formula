@@ -60,6 +60,14 @@ group_{{ group }}_present:
     {%- set home = usersandgroups.home_base ~ user if user != 'root' else '/root' %}
   {%- endif %}
 
+  # definition of $HOME source, depending of global config if not
+  {%- set files_home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:home:source', None) %}
+  {% if files_home is none and files_home_global %}
+    {%- set files_home = files_home_global ~ user %}
+  {%- elif files_home is none and files_default_home %}
+    {%- set files_home = files_default_home %}
+  {%- endif %}
+
   # defining its shell
   {%- set shell = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':shell', None) %}
   {%- if shell is none %}
@@ -83,18 +91,11 @@ group_{{ group }}_present:
 
   # :users:<user>:files   enable or disable per-user file management
   #                        if not set, use global config
-  {%- set files_enabled = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', True) %}
-  {%- if files_enabled %}
-    # per-user definition of files
-    {%- set files = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', None) %}
-    {%- if files is not none %}
-      {%- set files_enabled = True %}
-    {%- else %}
-      {%- set files_enabled = files_enabled_global %}
-    {%- endif %}
-
-    # per-user $HOME source definition, depending of global config if not
-    {%- set files_home = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files:home:source', files_home_global ~ user) %}
+  {%- set files = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':files', None) %}
+  {%- if files is not none %}
+    {%- set files_enabled = True %}
+  {%- else %}
+    {%- set files_enabled = files_enabled_global %}
   {%- endif %}
 
   # do we remove its already present groups, depending of global config if not set
@@ -130,7 +131,7 @@ user_{{ user }}_present:
 # home directory creation
 # and management of its content if needed
 {{ user }}_home:
-  {%- if files_enabled %}
+  {%- if files_home %}
   file.recurse:
   {%- else %}
   file.directory:
@@ -138,7 +139,7 @@ user_{{ user }}_present:
     - name: {{ home }}
     - user: {{ user }}
     - group: {{ primary_group }}
-    {%- if files_enabled %}
+    {%- if files_home %}
     - source:
       - {{ files_home }}
       {%- if files_enabled_global %}
