@@ -19,6 +19,8 @@ usersandgroups:
         #source: salt://users_files/
         # a common default source can also be used
         #default_source: salt://users_files/_default/
+        # delete absent_users' files
+        #purge: False
     #  remove_groups: False
 
   # groups can be explicitely defined here
