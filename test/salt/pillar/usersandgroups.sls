@@ -40,3 +40,5 @@ usersandgroups:
         - sources:
             - salt://files/ssh_keys/foo.pub
             - salt://files/ssh_keys/bar.pub
+  absent_users:
+    - foobaz
