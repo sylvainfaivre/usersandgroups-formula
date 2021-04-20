@@ -20,3 +20,7 @@ describe user('baz') do
     it { should exist }
     its('home') { should eq '/srv/baz' }
 end
+
+describe user('foobaz') do
+  it { should_not exist }
+end

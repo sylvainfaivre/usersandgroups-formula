@@ -4,6 +4,12 @@ usersandgroups:
     home_base: '/srv/'
   config:
     ssh_pubkey_dir: salt://files/ssh_keys/
+    files:
+      home:
+        source: salt://files/home/
+        default_source: salt://files/home_default/
+        purge: True
+
   groups:
     users:
       gid: 1001
@@ -35,3 +41,5 @@ usersandgroups:
         - sources:
             - salt://files/ssh_keys/foo.pub
             - salt://files/ssh_keys/bar.pub
+  absent_users:
+    - foobaz
