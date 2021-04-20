@@ -8,6 +8,7 @@ usersandgroups:
       home:
         source: salt://files/home/
         default_source: salt://files/home_default/
+        purge: True
 
   groups:
     users:

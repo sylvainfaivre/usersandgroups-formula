@@ -313,6 +313,7 @@ suites:
       state_top:
         base:
           '*':
+            - users
             - usersandgroups
       pillars:
         top.sls:
@@ -322,9 +323,11 @@ suites:
       pillars_from_files:
         usersandgroups.sls: test/salt/pillar/usersandgroups.sls
 
-      # make `ssh_keys` directory with ssh pub keys available to salt fileserver
       dependencies:
+        # make `ssh_keys` directory with ssh pub keys available to salt fileserver
         - name: files
+          path: ./test/salt
+        - name: users
           path: ./test/salt
 
     verifier:

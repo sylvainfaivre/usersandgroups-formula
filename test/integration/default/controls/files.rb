@@ -30,3 +30,7 @@ describe file('/srv/foobar/default-file') do
   it { should be_file }
   its('content') { should match /default file/ }
 end
+
+describe file('/home/foobaz') do
+  it { should_not exist }
+end
