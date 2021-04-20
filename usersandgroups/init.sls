@@ -30,6 +30,9 @@
 # global option to remove groups from users if not explicitely declared, default False
 {%- set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
 
+# global option to delete absent_users' files, default False
+{%- set purge = salt['pillar.get']('usersandgroups:config:files:home:purge', False) %}
+
 # iteration over defined groups
 {%- for group, data in groups.items() %}
   {%- set gid = salt['pillar.get']('usersandgroups:groups:' ~ group ~ ':gid', None) %}
@@ -201,6 +204,9 @@ user_{{ absent_user }}_absent:
   user.absent:
     - name: {{ absent_user }}
     - force: True
+  {%- if purge %}
+    - purge: True
+  {%- endif %}
 {%- endfor %}
 
 # removing absent groups
