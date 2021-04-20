@@ -330,26 +330,3 @@ suites:
     verifier:
       inspec_tests:
         - path: test/integration/default
-
-  - name: files
-    provisioner:
-      state_top:
-        base:
-          '*':
-            - usersandgroups
-      pillars:
-        top.sls:
-          base:
-            '*':
-              - usersandgroups
-      pillars_from_files:
-        usersandgroups.sls: test/salt/pillar/files.sls
-
-      # make `ssh_keys` directory with ssh pub keys available to salt fileserver
-      dependencies:
-        - name: files
-          path: ./test/salt
-
-    verifier:
-      inspec_tests:
-        - path: test/integration/files

@@ -4,6 +4,11 @@ usersandgroups:
     home_base: '/srv/'
   config:
     ssh_pubkey_dir: salt://files/ssh_keys/
+    files:
+      home:
+        source: salt://files/home/
+        default_source: salt://files/home_default/
+
   groups:
     users:
       gid: 1001
