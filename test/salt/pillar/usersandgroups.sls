@@ -4,11 +4,11 @@ usersandgroups:
     home_base: '/srv/'
   config:
     ssh_pubkey_dir: salt://files/ssh_keys/
+    purge_absent_users_files: True
     files:
       home:
         source: salt://files/home/
         default_source: salt://files/home_default/
-        purge: True
 
   groups:
     users:
