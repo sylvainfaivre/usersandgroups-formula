@@ -10,6 +10,9 @@ usersandgroups:
   #config:
     #ssh_pubkeys_dir: salt://ssh_keys/
 
+    # delete absent_users' files
+    #purge_absent_users_files: False
+
     # files management is disabled by default
     # if you want to enable globally, just define them
     #files:
@@ -19,8 +22,6 @@ usersandgroups:
         #source: salt://users_files/
         # a common default source can also be used
         #default_source: salt://users_files/_default/
-        # delete absent_users' files
-        #purge: False
     #  remove_groups: False
 
   # groups can be explicitely defined here
