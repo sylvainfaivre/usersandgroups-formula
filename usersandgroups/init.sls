@@ -30,6 +30,9 @@
 # global option to remove groups from users if not explicitely declared, default False
 {%- set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
 
+# global options for home directories
+{%- set home_directory_options = salt['pillar.get']('usersandgroups:config:home_directory_options', None) %}
+
 # global option to delete absent_users' files, default False
 {%- set purge_absent_users_files = salt['pillar.get']('usersandgroups:config:purge_absent_users_files', False) %}
 
@@ -152,6 +155,11 @@ user_{{ user }}_present:
     - makedirs: true
     - clean: False
     - include_empty: false
+    {%- if home_directory_options is defined %}
+      {%- for key, value in home_directory_options.items() %}
+    - {{ key }}: {{ value }}
+      {%- endfor %}
+    {%- endif %}
     - require:
       - user: user_{{ user }}_present
       - group: group_{{ user }}_{{ primary_group }}_present
