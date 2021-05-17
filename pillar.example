@@ -24,6 +24,10 @@ usersandgroups:
         #default_source: salt://users_files/_default/
     #  remove_groups: False
 
+    # you can define options for users here
+    #user_options:
+      #allow_gid_change: True
+
     # you can define options for home directories here
     #home_directory_options:
       #dir_mode: 700

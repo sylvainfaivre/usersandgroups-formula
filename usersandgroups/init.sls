@@ -30,6 +30,9 @@
 # global option to remove groups from users if not explicitely declared, default False
 {%- set remove_groups_global = salt['pillar.get']('usersandgroups:config:remove_groups', False) %}
 
+# global options for users
+{%- set user_options = salt['pillar.get']('usersandgroups:config:user_options', None) %}
+
 # global options for home directories
 {%- set home_directory_options = salt['pillar.get']('usersandgroups:config:home_directory_options', None) %}
 
@@ -133,6 +136,11 @@ user_{{ user }}_present:
     - groups: {{ groups }}
     - optional_groups: {{ optional_groups }}
     - system: {{ system }}
+    {%- if user_options is defined %}
+      {%- for key, value in user_options.items() %}
+    - {{ key }}: {{ value }}
+      {%- endfor %}
+    {%- endif %}
 
 # home directory creation
 # and management of its content if needed
