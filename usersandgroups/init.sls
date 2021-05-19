@@ -136,7 +136,7 @@ user_{{ user }}_present:
     - groups: {{ groups }}
     - optional_groups: {{ optional_groups }}
     - system: {{ system }}
-    {%- if user_options is defined %}
+    {%- if user_options is not none %}
       {%- for key, value in user_options.items() %}
     - {{ key }}: {{ value }}
       {%- endfor %}
@@ -163,7 +163,7 @@ user_{{ user }}_present:
     - makedirs: true
     - clean: False
     - include_empty: false
-    {%- if home_directory_options is defined %}
+    {%- if home_directory_options is not none %}
       {%- for key, value in home_directory_options.items() %}
     - {{ key }}: {{ value }}
       {%- endfor %}
